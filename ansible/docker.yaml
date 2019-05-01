@@ -1,0 +1,63 @@
+---
+- name: Install Docker
+  hosts: docker
+  user: root
+  become: yes
+  tasks:
+  - name: Installing prerequisite packages
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - python2-pip
+        - PyYAML
+
+  - name: Adding Docker repository
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      mode: 0644
+
+  - name: Installing Docker
+    yum:
+      name: docker-ce
+      state: latest
+
+  - name: Starting and enabling Docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+
+  - name: Installing Docker module for Python
+    pip:
+      name: docker
+
+  - name: Pull Shaarli
+    docker_image:
+      name: shaarli/shaarli
+
+  - name: Pull Bitwarden_rs
+    docker_image:
+      name: mprasil/bitwarden:alpine
+
+  - name: Pull Ouroboros
+    docker_image:
+      name: pyouroboros/ouroboros
+
+  - name: Check if Docker Compose is installed
+    command: docker-compose --version
+    register: docker_compose_check
+    ignore_errors: yes
+
+  - name: Download and install Docker Compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.24.0/docker-compose-Linux-x86_64
+      dest: /usr/local/bin/docker-compose
+      mode: 0755
+    when:
+      - docker_compose_check.msg is defined
+      - docker_compose_check.msg.find('No such file or directory') != -1

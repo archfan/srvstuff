@@ -1,31 +1,31 @@
 {
   "brand": "bhyve",
-  "alias": "pihole",
-  "hostname": "pihole",
+  "alias": "{{ pihole_alias }}",
+  "hostname": "{{ pihole_hostname }}",
   "resolvers": [
-    "8.8.8.8",
-    "1.1.1.1"
+    "{{ pihole_resolver1 }}",
+    "{{ pihole_resolver2 }}"
   ],
-  "ram": "1024",
-  "vcpus": "1",
+  "ram": "{{ pihole_ram }}",
+  "vcpus": "{{ pihole_cores }}",
   "nics": [
     {
       "nic_tag": "igb0",
-      "ip": "10.0.30.10",
+      "ip": "{{ pihole_ip }}",
       "netmask": "255.255.255.0",
-      "gateway": "10.0.30.1",
+      "gateway": "{{ pihole_gateway }}",
       "model": "virtio",
       "primary": true
     }
   ],
   "disks": [
     {
-      "image_uuid": "d6e56c0e-1e51-11e9-8ff1-2fecf38a5566",
+      "image_uuid": "{{ pihole_distro }}",
       "boot": true,
       "model": "virtio"
     }
  ],
 "customer_metadata": {
-    "root_authorized_keys": "",
+    "root_authorized_keys": "{{ ssh_pubkey }}",
     "user-script" : "/usr/sbin/mdata-get root_authorized_keys > ~root/.ssh/authorized_keys ; /usr/sbin/mdata-get root_authorized_keys > ~admin/.ssh/authorized_keys"
 }

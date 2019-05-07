@@ -26,7 +26,7 @@
     }
  ],
 "customer_metadata": {
-    "cloud-init:user-data": "#cloud-config\n\npackage_upgrade: true\n\npackages:\n  - ansible",
+    "cloud-init:user-data": "#cloud-config\n\npackage_upgrade: true"
     "root_authorized_keys": "{{ ssh_pubkey }}",
     "user-script" : "/usr/sbin/mdata-get root_authorized_keys > ~root/.ssh/authorized_keys ; /usr/sbin/mdata-get root_authorized_keys > ~admin/.ssh/authorized_keys"
 }
